@@ -1,12 +1,18 @@
 ﻿from __future__ import generators
 from PythonClientAPI.libs.Game.Enums import *
 from PythonClientAPI.libs.Game.MapOutOfBoundsException import *
+from math import *
 
 
 class PlayerAI:
     def __init__(self):
         # Initialize any objects or variables you need here.
-        pass
+        isInEnemyLOS = False
+        isInBulletTrajectory = False
+        isInTurretLaserTrajectory = False
+        isInTurretLOS = False
+        isGettingHit = False
+        isEnemyInLOS = False
 
     def get_move(self, gameboard, player, opponent):
         '''
@@ -25,13 +31,34 @@ class PlayerAI:
         
         '''
         
+        #check if in enemy line of sight
+
         
         
         return Move.NONE
 
+    def isInProximity(currentCoordinate, targetCoordinateX, targetCoordinateY, radius, gameboard):
+        '''
+        check if the current object and target object are within radius of each other
+        '''
+        euclideanDistance = math.pow(math.pow(currentCoordinate.x - targetCoordinateX, 2) + \
+            math.pow(currentCoordinate.y - targetCoordinateY, 2), 0.5)
+        wrapAroundDistance = math.pow(math.pow((gameboard.height - (currentCoordinate.x - targetCoordinateX)), 2) + \
+            math.pow((gameboard.height - (currentCoordinate.y - targetCoordinateY)), 2), 0.5)
 
+        if euclideanDistance < radius or wrapAroundDistance < radius:
+            return True
+        return False
 
-
+    def isInLineOfSight(player, targetCoordinateX, targetCoordinateY, gameboard):
+        if(player.direction == 'LEFT'):
+            for i in range(0, gameboard.width):
+                if((player.x + i) == targetCoordinateX):
+                    return True
+                if(gameboard.is_wall_at_tile(player.x + i, player.y)):
+                    return False
+        
+        return False
 
 #taken from http://code.activestate.com/recipes/117228-priority-dictionary/
 class priorityDictionary(dict):
