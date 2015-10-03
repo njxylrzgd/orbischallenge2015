@@ -1,10 +1,10 @@
 {
-	"numberOfAIPlayers": "0",
+	"numberOfAIPlayers": "1",
 	"renderGUI": "true",
 	"mapName": "SimpleMap1.json",
 	"swapAIPlayers": "false",
 	"maxResponseTime": "250",
 	"keyboardDelay": "300",
-	"portNumber" : "4461",
+	"portNumber" : "8080",
 	"serverTimeout" : "20000"
 }
