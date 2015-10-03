@@ -82,44 +82,44 @@ class PlayerAI:
 
 
         #check if in enemy line of sight, then get out of the way
-        if(isInLineOfSight(opponent, player.x, player.y, gameboard)):
-            return dipLah(opponent.direction, player.direction, self.map[(player.x,player.y)])
+        if(self.isInLineOfSight(opponent, player.x, player.y, gameboard)):
+            return self.dipLah(opponent.direction, player.direction, self.map[(player.x,player.y)])
                 
         #check if in bullet or laser intercept trajectory, then get out of the way
         for turret in gameboard.turrets:
-            if(isInProximity(turret, player.x, player.y, 5, gameboard)):
-                if(isInLineOfSight(turret, player.x, player.y, gameboard)):
+            if(self.isInProximity(turret, player.x, player.y, 5, gameboard)):
+                if(self.isInLineOfSight(turret, player.x, player.y, gameboard)):
                     if(turret.x == player.x):
-                        return dipLah('LEFT' if turret.x > player.x else 'RIGHT', player.direction, self.map[(player.x,player.y)])
+                        return self.dipLah('LEFT' if turret.x > player.x else 'RIGHT', player.direction, self.map[(player.x,player.y)])
                     if(turret.y == player.y):
-                        return dipLah('UP' if turret.y < player.y else 'DOWN', player.direction, self.map[(player.x,player.y)])
+                        return self.dipLah('UP' if turret.y < player.y else 'DOWN', player.direction, self.map[(player.x,player.y)])
         
         for bullet in gameboard.bullets:
-            if(isInProximity(bullet, player.x, player.y, 2, gameboard)):
-                if(isInLineOfSight(bullet, player.x, player.y, gameboard)):
-                    return dipLah(bullet.direction, player.direction, self.map[(player.x,player.y)])
+            if(self.isInProximity(bullet, player.x, player.y, 2, gameboard)):
+                if(self.isInLineOfSight(bullet, player.x, player.y, gameboard)):
+                    return self.dipLah(bullet.direction, player.direction, self.map[(player.x,player.y)])
 
         #check if laser is in line of sight, then shoot
         for turret in gameboard.turrets:
-            if(isInLineOfSight(player, turret.x, turret.y, gameboard)):
+            if(self.isInLineOfSight(player, turret.x, turret.y, gameboard)):
                 return Move.SHOOT
 
         #if there's a power up nearby
         for powerUp in gameboard.power_ups:
-            if(isInProximity(powerUp, player.x, player.y, 2, gameboard)):
+            if(self.isInProximity(powerUp, player.x, player.y, 2, gameboard)):
+                moves = shortestPath(map, (player.x, player.y), (powerUp.x, powerUp.y))
+                return self.determineDirection(player, moves[0])
+        for powerUp in gameboard.power_ups:
+            if(self.isInProximity(powerUp, player.x, player.y, 6, gameboard)):
                 moves = shortestPath(map, (player.x, player.y), (powerUp.x, powerUp.y))
                 return determineDirection(player, moves[0])
         for powerUp in gameboard.power_ups:
-            if(isInProximity(powerUp, player.x, player.y, 6, gameboard)):
+            if(self.isInProximity(powerUp, player.x, player.y, 9, gameboard)):
                 moves = shortestPath(map, (player.x, player.y), (powerUp.x, powerUp.y))
-                return determineDirection(player, moves[0])
-        for powerUp in gameboard.power_ups:
-            if(isInProximity(powerUp, player.x, player.y, 9, gameboard)):
-                moves = shortestPath(map, (player.x, player.y), (powerUp.x, powerUp.y))
-                return determineDirection(player, moves[0])
+                return self.determineDirection(player, moves[0])
         for powerUp in gameboard.power_ups:
             moves = shortestPath(map, (player.x, player.y), (powerUp.x, powerUp.y))
-            return determineDirection(player, moves[0])
+            return self.determineDirection(player, moves[0])
             #compute shortest path to it
         #if there's a power up in the map
 
@@ -129,7 +129,7 @@ class PlayerAI:
         
         return Move.NONE
 
-    def isInProximity(currentCoordinate, targetCoordinateX, targetCoordinateY, radius, gameboard):
+    def isInProximity(self, currentCoordinate, targetCoordinateX, targetCoordinateY, radius, gameboard):
         '''
         check if the current object and target object are within radius of each other
         '''
@@ -142,7 +142,7 @@ class PlayerAI:
             return True
         return False
 
-    def determineDirection(player, targetCoordinate):
+    def determineDirection(self, player, targetCoordinate):
         '''
         target coordinate - (x, y)
         player - player obj
@@ -171,7 +171,7 @@ class PlayerAI:
                 else:
                     return Move.FORWARD
 
-    def isInLineOfSight(player, targetCoordinateX, targetCoordinateY, gameboard):
+    def isInLineOfSight(self, player, targetCoordinateX, targetCoordinateY, gameboard):
         if(isinstance(player, 'Player') or isinstance(player,'Bullet')):
             if(player.direction == 'RIGHT'):
                 for i in range(0, gameboard.width - player.x):
@@ -222,7 +222,7 @@ class PlayerAI:
                         return False
         return False
     
-    def dipLah (opponentDirection, currentDirection, vicinityMap):
+    def dipLah (self, opponentDirection, currentDirection, vicinityMap):
         if opponentDirection == 'UP': # Opponent is below
             if vicinityMap[(1,0)]: # Can move right
                 if currentDirection == 'RIGHT':
