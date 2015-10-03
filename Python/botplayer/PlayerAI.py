@@ -7,6 +7,17 @@ class PlayerAI:
     def __init__(self):
         # Initialize any objects or variables you need here.
         map = {}
+        
+        for x in range(gameboard.width):
+            for y in range(gameboard.height):
+                if not gameboard.is_wall_at_tile((x + 1) % gameboard.width, y):
+                    map[(x,y)][(1,0)] = 1;
+                if not gameboard.is_wall_at_tile((x - 1 + gameboard.width) % gameboard.width, y):
+                    map[(x,y)][(-1,0)] = 1;
+                if not gameboard.is_wall_at_tile(x, (y + 1) % gameboard.height):
+                    map[(x,y)][(0,1)] = 1;
+                if not gameboard.is_wall_at_tile(x, (y - 1 + gameboard.height) % gameboard.height):
+                    map[(x,y)][(0,-1)] = 1;
         pass
 
     def get_move(self, gameboard, player, opponent):
@@ -25,28 +36,27 @@ class PlayerAI:
         5. See if power up available/necessary
         
         '''
-        
-        
-        
-        for x in range(gameboard.width):
-            for y in range(gameboard.height):
-                if x == player.x and y == player.y:
-                    if not gameboard.is_wall_at_tile((x + 1) % gameboard.width,(y + 1) % gameboard.height):
-                        
-                    if not gameboard.is_wall_at_tile((x - 1 + gameboard.width) % gameboard.width,(y + 1) % gameboard.height):
-                        
-                    if not gameboard.is_wall_at_tile((x + 1) % gameboard.width,(y - 1 + gameboard.height) % gameboard.height):
-                    
-                    if not gameboard.is_wall_at_tile((x - 1 + gameboard.width) % gameboard.width,(y - 1 + gameboard.height) % gameboard.height):
-                else:
-                    if not gameboard.is_wall_at_tile((x + 1) % gameboard.width,(y + 1) % gameboard.height):
-                    
-                    if not gameboard.is_wall_at_tile((x - 1 + gameboard.width) % gameboard.width,(y + 1) % gameboard.height):
-                        
-                    if not gameboard.is_wall_at_tile((x + 1) % gameboard.width,(y - 1 + gameboard.height) % gameboard.height):
-                    
-                    if not gameboard.is_wall_at_tile((x - 1 + gameboard.width) % gameboard.width,(y - 1 + gameboard.height) % gameboard.height):
-                        
+
+        if not gameboard.is_wall_at_tile((x + 1) % gameboard.width, y):
+            if player.direction == 'RIGHT':
+                map[(x,y)][(1,0)] = 1
+            else:
+                map[(x,y)][(1,0)] = 2
+        if not gameboard.is_wall_at_tile((x - 1 + gameboard.width) % gameboard.width, y):
+            if player.direction == 'LEFT':
+                map[(x,y)][(-1,0)] = 1
+            else:
+                map[(x,y)][(-1,0)] = 2
+        if not gameboard.is_wall_at_tile(x, (y - 1 + gameboard.height) % gameboard.height):
+            if player.direction == 'UP':
+                map[(x,y)][(0, -1)] = 1
+            else:
+                map[(x,y)][(0, -1)] = 2
+        if not gameboard.is_wall_at_tile(x, (y + 1) % gameboard.height):
+            if player.direction == 'DOWN':
+                map[(0,1):1]
+            else:
+                map[(0,1):2]
                     
         
         
