@@ -62,8 +62,6 @@ class PlayerAI:
                 self.map[(player.x,player.y)][(0,1)] = 1
             else:
                 self.map[(player.x,player.y)][(0,1)]  = 2
-            
-        
         
         return Move.NONE
 
