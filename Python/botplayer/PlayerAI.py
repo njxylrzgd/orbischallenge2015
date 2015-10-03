@@ -6,7 +6,7 @@ from PythonClientAPI.libs.Game.MapOutOfBoundsException import *
 class PlayerAI:
     def __init__(self):
         # Initialize any objects or variables you need here.
-        map = [[0 for y in range(gameboard.height)] for y in range(gameboard.width)]
+        map = {}
         pass
 
     def get_move(self, gameboard, player, opponent):
@@ -30,10 +30,24 @@ class PlayerAI:
         
         for x in range(gameboard.width):
             for y in range(gameboard.height):
-                if gameboard.is_wall_at_tile(x,y):
-                    map[(x + player.x) % gameboard.width][(y + player.y) % gameboard.height] = 0
+                if x == player.x and y == player.y:
+                    if not gameboard.is_wall_at_tile((x + 1) % gameboard.width,(y + 1) % gameboard.height):
+                        
+                    if not gameboard.is_wall_at_tile((x - 1 + gameboard.width) % gameboard.width,(y + 1) % gameboard.height):
+                        
+                    if not gameboard.is_wall_at_tile((x + 1) % gameboard.width,(y - 1 + gameboard.height) % gameboard.height):
+                    
+                    if not gameboard.is_wall_at_tile((x - 1 + gameboard.width) % gameboard.width,(y - 1 + gameboard.height) % gameboard.height):
                 else:
-                    map[(x + player.x) % gameboard.width][(y + player.y) % gameboard.height] = 1
+                    if not gameboard.is_wall_at_tile((x + 1) % gameboard.width,(y + 1) % gameboard.height):
+                    
+                    if not gameboard.is_wall_at_tile((x - 1 + gameboard.width) % gameboard.width,(y + 1) % gameboard.height):
+                        
+                    if not gameboard.is_wall_at_tile((x + 1) % gameboard.width,(y - 1 + gameboard.height) % gameboard.height):
+                    
+                    if not gameboard.is_wall_at_tile((x - 1 + gameboard.width) % gameboard.width,(y - 1 + gameboard.height) % gameboard.height):
+                        
+                    
         
         
         
