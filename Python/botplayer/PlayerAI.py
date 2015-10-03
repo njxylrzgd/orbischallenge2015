@@ -44,16 +44,48 @@ class PlayerAI:
         '''
 
         #check if in enemy line of sight, then get out of the way
-
+        if(isInLineOfSight(opponent, player.x, player.y, gameboard)):
+            return dipLah(opponent.direction, player.direction, self.map[(player.x,player.y)])
+                
         #check if in bullet or laser intercept trajectory, then get out of the way
+        for turret in gameboard.turrets:
+            if(isInProximity(turret, player.x, player.y, 5, gameboard)):
+                if(isInLineOfSight(turret, player.x, player.y, gameboard)):
+                    if(turret.x == player.x):
+                        return dipLah('LEFT' if turret.x > player.x else 'RIGHT', player.direction, self.map[(player.x,player.y)])
+                    if(turret.y == player.y):
+                        return dipLah('UP' if turret.y < player.y else 'DOWN', player.direction, self.map[(player.x,player.y)])
+        
+        for bullet in gameboard.bullets:
+            if(isInProximity(bullet, player.x, player.y, 2, gameboard)):
+                if(isInLineOfSight(bullet, player.x, player.y, gameboard)):
+                    return dipLah(bullet.direction, player.direction, self.map[(player.x,player.y)])
 
         #check if laser is in line of sight, then shoot
+        for turret in gameboard.turrets:
+            if(isInLineOfSight(player, turret.x, turret.y, gameboard)):
+                return Move.SHOOT
 
         #if there's a power up nearby
+        for powerUp in gameboard.power_ups:
+            if(isInProximity(powerUp, player.x, player.y, 2, gameboard)):
+                moves = shortestPath(map, (player.x, player.y), (powerUp.x, powerUp.y))
+                return determineDirection(player, moves[0])
+        for powerUp in gameboard.power_ups:
+            if(isInProximity(powerUp, player.x, player.y, 6, gameboard)):
+                moves = shortestPath(map, (player.x, player.y), (powerUp.x, powerUp.y))
+                return determineDirection(player, moves[0])
+        for powerUp in gameboard.power_ups:
+            if(isInProximity(powerUp, player.x, player.y, 9, gameboard)):
+                moves = shortestPath(map, (player.x, player.y), (powerUp.x, powerUp.y))
+                return determineDirection(player, moves[0])
+        for powerUp in gameboard.power_ups:
+            moves = shortestPath(map, (player.x, player.y), (powerUp.x, powerUp.y))
+            return determineDirection(player, moves[0])
             #compute shortest path to it
         #if there's a power up in the map
+
             #compute shortest path to it
-        
         
         if not self.initself:        
             self.initself = True
@@ -107,31 +139,84 @@ class PlayerAI:
             return True
         return False
 
+    def determineDirection(player, targetCoordinate):
+        '''
+        target coordinate - (x, y)
+        player - player obj
+        determines next move for player to get to the target 
+        '''
+        if player.x == targetCoordinate[0]:
+            if player.x > targetCoordinate[0]:
+                if player.direction != 'LEFT':
+                    return Move.FACE_LEFT
+                else:
+                    return Move.FORWARD
+            else:
+                if player.direction != 'RIGHT':
+                    return Move.FACE_RIGHT
+                else:
+                    return Move.FORWARD
+        if player.y == targetCoordinate[1]:
+            if player.y > targetCoordinate[1]:
+                if player.direction != 'DOWN':
+                    return Move.FACE_DOWN
+                else:
+                    return Move.FORWARD
+            else:
+                if player.direction != 'UP':
+                    return Move.FACE_UP
+                else:
+                    return Move.FORWARD
+
     def isInLineOfSight(player, targetCoordinateX, targetCoordinateY, gameboard):
-        if(player.direction == 'RIGHT'):
-            for i in range(0, gameboard.width - player.x):
-                if((player.x + i) == targetCoordinateX):
-                    return True
-                if(gameboard.is_wall_at_tile(player.x + i, player.y)):
-                    return False
-        if(player.direction == 'LEFT'):
-            for i in range(0, player.x):
-                if((player.x - i) == targetCoordinateX):
-                    return True
-                if(gameboard.is_wall_at_tile(player.x - i, player.y)):
-                    return False
-        if(player.direction == 'UP'):
-            for i in range(0, gameboard.height  - player.y):
-                if((player.y + i) == targetCoordinateY):
-                    return True
-                if(gameboard.is_wall_at_tile(player.x, player.y + i)):
-                    return False
-        if(player.direction == 'DOWN'):
-            for i in range(0, player.y):
-                if((player.x - i) == targetCoordinateX):
-                    return True
-                if(gameboard.is_wall_at_tile(player.x - i, player.y)):
-                    return False
+        if(isinstance(player, 'Player') or isinstance(player,'Bullet')):
+            if(player.direction == 'RIGHT'):
+                for i in range(0, gameboard.width - player.x):
+                    if((player.x + i) == targetCoordinateX):
+                        return True
+                    if(gameboard.is_wall_at_tile(player.x + i, player.y) or gameboard.is_turret_at_tile(player.x + i, player.y)):
+                        return False
+            if(player.direction == 'LEFT'):
+                for i in range(0, player.x):
+                    if((player.x - i) == targetCoordinateX):
+                        return True
+                    if(gameboard.is_wall_at_tile(player.x - i, player.y) or gameboard.is_turret_at_tile(player.x - i, player.y)):
+                        return False
+            if(player.direction == 'UP'):
+                for i in range(0, gameboard.height  - player.y):
+                    if((player.y + i) == targetCoordinateY):
+                        return True
+                    if(gameboard.is_wall_at_tile(player.x, player.y + i) or gameboard.is_turret_at_tile(player.x, player.y + i)):
+                        return False
+            if(player.direction == 'DOWN'):
+                for i in range(0, player.y):
+                    if((player.y - i) == targetCoordinateY):
+                        return True
+                    if(gameboard.is_wall_at_tile(player.x, player.y - i) or gameboard.is_turret_at_tile(player.x, player.y - i)):
+                        return False
+        elif (isinstance(player, 'Turret')):
+            if(player.x == targetCoordinateX):
+                for i in range(0, gameboard.width - player.x if (gameboard.width - player.x < 5) else 5):
+                    if((player.x + i) == targetCoordinateX):
+                        return True
+                    if(gameboard.is_wall_at_tile(player.x + i, player.y)):
+                        return False
+                for i in range(0, player.x if (player.x < 5) else 5):
+                    if((player.x - i) == targetCoordinateX):
+                        return True
+                    if(gameboard.is_wall_at_tile(player.x - i, player.y)):
+                        return False
+            if(player.y == targetCoordinateY):
+                for i in range(0, gameboard.height  - player.y  if (gameboard.height - player.y < 5) else 5):
+                    if((player.y + i) == targetCoordinateY):
+                        return True
+                    if(gameboard.is_wall_at_tile(player.x, player.y + i)):
+                        return False
+                for i in range(0, player.y if (player.y < 5) else 5):
+                    if((player.y - i) == targetCoordinateY):
+                        return True
+                    if(gameboard.is_wall_at_tile(player.x, player.y - i)):
+                        return False
         return False
 
 #taken from http://code.activestate.com/recipes/117228-priority-dictionary/
