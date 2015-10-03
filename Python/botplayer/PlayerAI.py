@@ -31,9 +31,9 @@ class PlayerAI:
         for x in range(gameboard.width):
             for y in range(gameboard.height):
                 if gameboard.is_wall_at_tile(x,y):
-                    map[x][y] = -1
+                    map[(x + player.x) % gameboard.width][(y + player.y) % gameboard.height] = -1
                 else:
-                    map[x][y] = 1
+                    map[(x + player.x) % gameboard.width][(y + player.y) % gameboard.height] = 1
         
             
         
