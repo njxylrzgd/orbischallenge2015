@@ -1,9 +1,16 @@
 ﻿from __future__ import generators
 from PythonClientAPI.libs.Game.Enums import *
 from PythonClientAPI.libs.Game.MapOutOfBoundsException import *
+from math import *
 
 
 class PlayerAI:
+    isInEnemyLOS = False
+    isInBulletTrajectory = False
+    isInTurretLaserTrajectory = False
+    isInTurretLOS = False
+    isGettingHit = False
+    isEnemyInLOS = False
     map = {}
     initself = False
     closest_turret = None
@@ -12,7 +19,12 @@ class PlayerAI:
 
     def __init__(self):
         # Initialize any objects or variables you need here.
-        pass
+        isInEnemyLOS = False
+        isInBulletTrajectory = False
+        isInTurretLaserTrajectory = False
+        isInTurretLOS = False
+        isGettingHit = False
+        isEnemyInLOS = False
 
     def get_move(self, gameboard, player, opponent):
         '''
@@ -31,6 +43,18 @@ class PlayerAI:
         
         '''
 
+        #check if in enemy line of sight, then get out of the way
+
+        #check if in bullet or laser intercept trajectory, then get out of the way
+
+        #check if laser is in line of sight, then shoot
+
+        #if there's a power up nearby
+            #compute shortest path to it
+        #if there's a power up in the map
+            #compute shortest path to it
+        
+        
         if not self.initself:        
             self.initself = True
             for x in range(gameboard.width):
@@ -66,9 +90,53 @@ class PlayerAI:
             else:
                 self.map[(player.x,player.y)][(0,1)]  = 2
         
+
+        
         return Move.NONE
 
+<<<<<<< HEAD
+=======
+    def isInProximity(currentCoordinate, targetCoordinateX, targetCoordinateY, radius, gameboard):
+        '''
+        check if the current object and target object are within radius of each other
+        '''
+        euclideanDistance = math.pow(math.pow(currentCoordinate.x - targetCoordinateX, 2) + \
+            math.pow(currentCoordinate.y - targetCoordinateY, 2), 0.5)
+        wrapAroundDistance = math.pow(math.pow((gameboard.height - (currentCoordinate.x - targetCoordinateX)), 2) + \
+            math.pow((gameboard.height - (currentCoordinate.y - targetCoordinateY)), 2), 0.5)
 
+        if euclideanDistance < radius or wrapAroundDistance < radius:
+            return True
+        return False
+
+    def isInLineOfSight(player, targetCoordinateX, targetCoordinateY, gameboard):
+        if(player.direction == 'RIGHT'):
+            for i in range(0, gameboard.width - player.x):
+                if((player.x + i) == targetCoordinateX):
+                    return True
+                if(gameboard.is_wall_at_tile(player.x + i, player.y)):
+                    return False
+        if(player.direction == 'LEFT'):
+            for i in range(0, player.x):
+                if((player.x - i) == targetCoordinateX):
+                    return True
+                if(gameboard.is_wall_at_tile(player.x - i, player.y)):
+                    return False
+        if(player.direction == 'UP'):
+            for i in range(0, gameboard.height  - player.y):
+                if((player.y + i) == targetCoordinateY):
+                    return True
+                if(gameboard.is_wall_at_tile(player.x, player.y + i)):
+                    return False
+        if(player.direction == 'DOWN'):
+            for i in range(0, player.y):
+                if((player.x - i) == targetCoordinateX):
+                    return True
+                if(gameboard.is_wall_at_tile(player.x - i, player.y)):
+                    return False
+        return False
+
+>>>>>>> origin/master
 #taken from http://code.activestate.com/recipes/117228-priority-dictionary/
 class priorityDictionary(dict):
     def __init__(self):
