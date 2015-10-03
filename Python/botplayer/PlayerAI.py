@@ -43,6 +43,44 @@ class PlayerAI:
         
         '''
 
+        
+        
+        if not self.initself:        
+            self.initself = True
+            for x in range(gameboard.width):
+                for y in range(gameboard.height):
+                    self.map[(x,y)] = {}
+                    if not gameboard.is_wall_at_tile((x + 1) % gameboard.width, y) and not gameboard.is_turret_at_tile((x + 1) % gameboard.width, y):
+                        self.map[(x,y)][(1,0)] = 1
+                    if not gameboard.is_wall_at_tile((x - 1 + gameboard.width) % gameboard.width, y) and not gameboard.is_turret_at_tile((x - 1 + gameboard.width) % gameboard.width, y) :
+                        self.map[(x,y)][(-1,0)] = 1
+                    if not gameboard.is_wall_at_tile(x, (y + 1) % gameboard.height) and not gameboard.is_turret_at_tile(x, (y + 1) % gameboard.height):
+                        self.map[(x,y)][(0,1)] = 1
+                    if not gameboard.is_wall_at_tile(x, (y - 1 + gameboard.height) % gameboard.height) and not gameboard.is_turret_at_tile(x, (y - 1 + gameboard.height) % gameboard.height):
+                        self.map[(x,y)][(0,-1)] = 1
+        
+        if not gameboard.is_wall_at_tile((player.x + 1) % gameboard.width, player.y) and not gameboard.is_wall_at_tile((player.x + 1) % gameboard.width, player.y):
+            if player.direction == 'RIGHT':
+                self.map[(player.x,player.y)][(1,0)] = 1
+            else:
+                self.map[(player.x,player.y)][(1,0)] = 2
+        if not gameboard.is_wall_at_tile((player.x - 1 + gameboard.width) % gameboard.width, player.y) and not gameboard.is_wall_at_tile((player.x - 1 + gameboard.width) % gameboard.width, player.y):
+            if player.direction == 'LEFT':
+                self.map[(player.x,player.y)][(-1,0)] = 1
+            else:
+                self.map[(player.x,player.y)][(-1,0)] = 2
+        if not gameboard.is_wall_at_tile(player.x, (player.y - 1 + gameboard.height) % gameboard.height) and not gameboard.is_wall_at_tile(player.x, (player.y - 1 + gameboard.height) % gameboard.height):
+            if player.direction == 'UP':
+                self.map[(player.x,player.y)][(0, -1)] = 1
+            else:
+                self.map[(player.x,player.y)][(0, -1)] = 2
+        if not gameboard.is_wall_at_tile(player.x, (player.y + 1) % gameboard.height) and not gameboard.is_wall_at_tile(player.x, (player.y + 1) % gameboard.height):
+            if player.direction == 'DOWN':
+                self.map[(player.x,player.y)][(0,1)] = 1
+            else:
+                self.map[(player.x,player.y)][(0,1)]  = 2
+
+
         #check if in enemy line of sight, then get out of the way
         if(isInLineOfSight(opponent, player.x, player.y, gameboard)):
             return dipLah(opponent.direction, player.direction, self.map[(player.x,player.y)])
@@ -86,41 +124,6 @@ class PlayerAI:
         #if there's a power up in the map
 
             #compute shortest path to it
-        
-        if not self.initself:        
-            self.initself = True
-            for x in range(gameboard.width):
-                for y in range(gameboard.height):
-                    self.map[(x,y)] = {}
-                    if not gameboard.is_wall_at_tile((x + 1) % gameboard.width, y) and not gameboard.is_turret_at_tile((x + 1) % gameboard.width, y):
-                        self.map[(x,y)][(1,0)] = 1
-                    if not gameboard.is_wall_at_tile((x - 1 + gameboard.width) % gameboard.width, y) and not gameboard.is_turret_at_tile((x - 1 + gameboard.width) % gameboard.width, y) :
-                        self.map[(x,y)][(-1,0)] = 1
-                    if not gameboard.is_wall_at_tile(x, (y + 1) % gameboard.height) and not gameboard.is_turret_at_tile(x, (y + 1) % gameboard.height):
-                        self.map[(x,y)][(0,1)] = 1
-                    if not gameboard.is_wall_at_tile(x, (y - 1 + gameboard.height) % gameboard.height) and not gameboard.is_turret_at_tile(x, (y - 1 + gameboard.height) % gameboard.height):
-                        self.map[(x,y)][(0,-1)] = 1
-        
-        if not gameboard.is_wall_at_tile((player.x + 1) % gameboard.width, player.y) and not gameboard.is_wall_at_tile((player.x + 1) % gameboard.width, player.y):
-            if player.direction == 'RIGHT':
-                self.map[(player.x,player.y)][(1,0)] = 1
-            else:
-                self.map[(player.x,player.y)][(1,0)] = 2
-        if not gameboard.is_wall_at_tile((player.x - 1 + gameboard.width) % gameboard.width, player.y) and not gameboard.is_wall_at_tile((player.x - 1 + gameboard.width) % gameboard.width, player.y):
-            if player.direction == 'LEFT':
-                self.map[(player.x,player.y)][(-1,0)] = 1
-            else:
-                self.map[(player.x,player.y)][(-1,0)] = 2
-        if not gameboard.is_wall_at_tile(player.x, (player.y - 1 + gameboard.height) % gameboard.height) and not gameboard.is_wall_at_tile(player.x, (player.y - 1 + gameboard.height) % gameboard.height):
-            if player.direction == 'UP':
-                self.map[(player.x,player.y)][(0, -1)] = 1
-            else:
-                self.map[(player.x,player.y)][(0, -1)] = 2
-        if not gameboard.is_wall_at_tile(player.x, (player.y + 1) % gameboard.height) and not gameboard.is_wall_at_tile(player.x, (player.y + 1) % gameboard.height):
-            if player.direction == 'DOWN':
-                self.map[(player.x,player.y)][(0,1)] = 1
-            else:
-                self.map[(player.x,player.y)][(0,1)]  = 2
         
 
         
@@ -224,24 +227,24 @@ class PlayerAI:
             if vicinityMap[(1,0)]: # Can move right
                 if currentDirection == 'RIGHT':
                     return Move.FORWARD
-                else if currentDirection == 'LEFT':
+                elif currentDirection == 'LEFT':
                     if vicinityMap[(-1,0)]: # Can move right
                         return Move.FORWARD
                     else:
                         return Move.FACE_RIGHT
                 else:
                     return Move.FACE_RIGHT
-            else if vicinityMap[(-1,0)]: # Can move left
+            elif vicinityMap[(-1,0)]: # Can move left
                 if currentDirection == 'LEFT':
                     return Move.FORWARD
-                else if currentDirection == 'RIGHT':
+                elif currentDirection == 'RIGHT':
                     if vicinityMap[(1,0)]: # Can move right
                         return Move.FORWARD
                     else:
                         return Move.FACE_LEFT
                 else:
                     return Move.FACE_LEFT
-            else if vicinityMap[(0,-1)]: # Can move up
+            elif vicinityMap[(0,-1)]: # Can move up
                 if currentDirection == 'UP':
                     return Move.FORWARD
                 else:
@@ -251,28 +254,28 @@ class PlayerAI:
                     return Move.FORWARD
                 else:
                     return Move.FACE_DOWN
-        else if opponentDirection == 'DOWN': # Opponent is above
+        elif opponentDirection == 'DOWN': # Opponent is above
             if vicinityMap[(-1,0)]: # Can move left
                 if currentDirection == 'LEFT':
                     return Move.FORWARD
-                else if currentDirection == 'RIGHT':
+                elif currentDirection == 'RIGHT':
                     if vicinityMap[(1,0)]: # Can move right
                         return Move.FORWARD
                     else:
                         return Move.FACE_LEFT
                 else:
                     return Move.FACE_LEFT
-            else if vicinityMap[(1,0)]: # Can move right
+            elif vicinityMap[(1,0)]: # Can move right
                 if currentDirection == 'RIGHT':
                     return Move.FORWARD
-                else if currentDirection == 'LEFT':
+                elif currentDirection == 'LEFT':
                     if vicinityMap[(-1,0)]: # Can move left
                         return Move.FORWARD
                     else:
                         return Move.FACE_RIGHT
                 else:
                     return Move.FACE_RIGHT
-            else if vicinityMap[(0,1)]: # Can move down
+            elif vicinityMap[(0,1)]: # Can move down
                 if currentDirection == 'DOWN':
                     return Move.FORWARD
                 else:
@@ -282,28 +285,28 @@ class PlayerAI:
                     return Move.FORWARD
                 else:
                     return Move.FACE_UP
-        else if opponentDirection == 'LEFT': # Opponent on the right
+        elif opponentDirection == 'LEFT': # Opponent on the right
             if vicinityMap[(0,-1)]: # Can move up
                 if currentDirection == 'UP':
                     return Move.FORWARD
-                else if currentDirection == 'DOWN':
+                elif currentDirection == 'DOWN':
                     if vicinityMap[(0,1)]: # Can move down
                         return Move.FORWARD
                     else:
                         return Move.FACE_UP
                 else:
                     return Move.FACE_UP
-            else if vicinityMap[(0,1)]: # Can move down
+            elif vicinityMap[(0,1)]: # Can move down
                 if currentDirection == 'DOWN':
                     return Move.FORWARD
-                else if currentDirection == 'UP':
+                elif currentDirection == 'UP':
                     if vicinityMap[(0,-1)]: # Can move up
                         return Move.FORWARD
                     else:
                         return Move.FACE_DOWN
                 else:
                     return Move.FACE_DOWN
-            else if vicinityMap[(-1, 0)]: # Can move left
+            elif vicinityMap[(-1, 0)]: # Can move left
                 if currentDirection == 'LEFT':
                     return Move.FORWARD
                 else:
@@ -317,24 +320,24 @@ class PlayerAI:
             if vicinityMap[(0,1)]: # Can move down
                 if currentDirection == 'DOWN':
                     return Move.FORWARD
-                else if currentDirection == 'UP':
+                elif currentDirection == 'UP':
                     if vicinityMap[(0,-1)]:
                         return Move.FORWARD
                     else:
                         return Move.FACE_DOWN
                 else:
                     return Move.FACE_DOWN
-            else if vicinityMap[(0,-1)]: # Can move up
+            elif vicinityMap[(0,-1)]: # Can move up
                 if currentDirection == 'UP':
                     return Move.FORWARD
-                else if currentDirection == 'DOWN':
+                elif currentDirection == 'DOWN':
                     if vicinityMap[(0,1)]:
                         return Move.FORWARD
                     else:
                         return Move.FACE_UP
                 else:
                     return Move.FACE_UP
-            else if vicinityMap[(1, 0)]: # Can move right
+            elif vicinityMap[(1, 0)]: # Can move right
                 if currentDirection == 'RIGHT':
                     return Move.FORWARD
                 else:
