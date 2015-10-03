@@ -6,6 +6,7 @@ from PythonClientAPI.libs.Game.MapOutOfBoundsException import *
 class PlayerAI:
     def __init__(self):
         # Initialize any objects or variables you need here.
+        map = [[0 for y in range(gameboard.height)] for y in range(gameboard.width)]
         pass
 
     def get_move(self, gameboard, player, opponent):
@@ -26,6 +27,15 @@ class PlayerAI:
         '''
         
         
+        
+        for x in range(gameboard.width):
+            for y in range(gameboard.height):
+                if gameboard.is_wall_at_tile(x,y):
+                    map[x][y] = -1
+                else:
+                    map[x][y] = 1
+        
+            
         
         return Move.NONE
 
