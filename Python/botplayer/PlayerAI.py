@@ -6,6 +6,9 @@ from PythonClientAPI.libs.Game.MapOutOfBoundsException import *
 class PlayerAI:
     map = {}
     initself = False
+    closest_turret = None
+    desiredPath = []
+    pathToTurret = []
 
     def __init__(self):
         # Initialize any objects or variables you need here.
@@ -64,9 +67,6 @@ class PlayerAI:
                 self.map[(player.x,player.y)][(0,1)]  = 2
         
         return Move.NONE
-
-
-
 
 
 #taken from http://code.activestate.com/recipes/117228-priority-dictionary/
