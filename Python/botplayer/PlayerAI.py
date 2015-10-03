@@ -94,8 +94,6 @@ class PlayerAI:
         
         return Move.NONE
 
-<<<<<<< HEAD
-=======
     def isInProximity(currentCoordinate, targetCoordinateX, targetCoordinateY, radius, gameboard):
         '''
         check if the current object and target object are within radius of each other
@@ -136,7 +134,6 @@ class PlayerAI:
                     return False
         return False
 
->>>>>>> origin/master
 #taken from http://code.activestate.com/recipes/117228-priority-dictionary/
 class priorityDictionary(dict):
     def __init__(self):
