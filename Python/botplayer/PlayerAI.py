@@ -11,6 +11,8 @@ class PlayerAI:
     isInTurretLOS = False
     isGettingHit = False
     isEnemyInLOS = False
+    map = {}
+    initself = False
 
     def __init__(self):
         # Initialize any objects or variables you need here.
@@ -50,7 +52,40 @@ class PlayerAI:
             #compute shortest path to it
         
         
-            
+        if not self.initself:        
+            self.initself = True
+            for x in range(gameboard.width):
+                for y in range(gameboard.height):
+                    self.map[(x,y)] = {}
+                    if not gameboard.is_wall_at_tile((x + 1) % gameboard.width, y):
+                        self.map[(x,y)][(1,0)] = 1
+                    if not gameboard.is_wall_at_tile((x - 1 + gameboard.width) % gameboard.width, y):
+                        self.map[(x,y)][(-1,0)] = 1
+                    if not gameboard.is_wall_at_tile(x, (y + 1) % gameboard.height):
+                        self.map[(x,y)][(0,1)] = 1
+                    if not gameboard.is_wall_at_tile(x, (y - 1 + gameboard.height) % gameboard.height):
+                        self.map[(x,y)][(0,-1)] = 1
+        
+        if not gameboard.is_wall_at_tile((player.x + 1) % gameboard.width, player.y):
+            if player.direction == 'RIGHT':
+                self.map[(player.x,player.y)][(1,0)] = 1
+            else:
+                self.map[(player.x,player.y)][(1,0)] = 2
+        if not gameboard.is_wall_at_tile((player.x - 1 + gameboard.width) % gameboard.width, player.y):
+            if player.direction == 'LEFT':
+                self.map[(player.x,player.y)][(-1,0)] = 1
+            else:
+                self.map[(player.x,player.y)][(-1,0)] = 2
+        if not gameboard.is_wall_at_tile(player.x, (player.y - 1 + gameboard.height) % gameboard.height):
+            if player.direction == 'UP':
+                self.map[(player.x,player.y)][(0, -1)] = 1
+            else:
+                self.map[(player.x,player.y)][(0, -1)] = 2
+        if not gameboard.is_wall_at_tile(player.x, (player.y + 1) % gameboard.height):
+            if player.direction == 'DOWN':
+                self.map[(player.x,player.y)][(0,1)] = 1
+            else:
+                self.map[(player.x,player.y)][(0,1)]  = 2
         
 
         
